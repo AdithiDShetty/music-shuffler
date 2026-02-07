@@ -25,9 +25,8 @@ const durationEl = document.getElementById("duration");
 let tracks = [];
 let playOrder = [];
 let currentIndex = 0;
-
 let shuffleEnabled = true;
-let repeatMode = "off"; // off | one | all
+let repeatMode = "off";
 
 selectBtn.onclick = changeFolderBtn.onclick = () => fileInput.click();
 
@@ -67,10 +66,13 @@ function rebuildQueue(startTrack = null) {
 function playFromQueue(index) {
   currentIndex = index;
   const track = playOrder[currentIndex];
+
   audio.src = URL.createObjectURL(track);
   audio.play();
   playPause.textContent = "⏸";
   trackName.textContent = track.name;
+
+  updateMediaSession(track);
   updatePlaylistUI(track);
   updateUpNext();
 }
@@ -81,16 +83,12 @@ function playNext() {
     audio.play();
     return;
   }
-
   currentIndex++;
   if (currentIndex >= playOrder.length) {
     if (repeatMode === "all") {
       rebuildQueue();
       currentIndex = 0;
-    } else {
-      audio.pause();
-      return;
-    }
+    } else return;
   }
   playFromQueue(currentIndex);
 }
@@ -133,22 +131,22 @@ function renderPlaylist() {
   });
 }
 
-function updatePlaylistUI(currentTrack) {
+function updatePlaylistUI(track) {
   [...playlistEl.children].forEach(li =>
-    li.classList.toggle("active", li.textContent === currentTrack.name)
+    li.classList.toggle("active", li.textContent === track.name)
   );
 }
 
 function updateUpNext() {
   upNextEl.innerHTML = "";
-  playOrder.slice(currentIndex + 1, currentIndex + 6).forEach(track => {
+  playOrder.slice(currentIndex + 1, currentIndex + 6).forEach(t => {
     const li = document.createElement("li");
-    li.textContent = track.name;
+    li.textContent = t.name;
     upNextEl.appendChild(li);
   });
 }
 
-/* SEEK */
+/* Seek bar */
 audio.onloadedmetadata = () => {
   seekBar.max = Math.floor(audio.duration);
   durationEl.textContent = formatTime(audio.duration);
@@ -165,4 +163,27 @@ function formatTime(sec) {
   const m = Math.floor(sec / 60);
   const s = Math.floor(sec % 60).toString().padStart(2, "0");
   return `${m}:${s}`;
+}
+
+/* 🔔 Media Session (Notification / Lock Screen) */
+function updateMediaSession(track) {
+  if (!("mediaSession" in navigator)) return;
+
+  navigator.mediaSession.metadata = new MediaMetadata({
+    title: track.name.replace(".mp3", ""),
+    artist: "Local Music",
+    album: "MP3 Shuffler",
+    artwork: [{
+      src: "https://via.placeholder.com/512",
+      sizes: "512x512",
+      type: "image/png"
+    }]
+  });
+
+  navigator.mediaSession.setActionHandler("play", () => audio.play());
+  navigator.mediaSession.setActionHandler("pause", () => audio.pause());
+  navigator.mediaSession.setActionHandler("previoustrack", () => {
+    if (currentIndex > 0) playFromQueue(--currentIndex);
+  });
+  navigator.mediaSession.setActionHandler("nexttrack", playNext);
 }

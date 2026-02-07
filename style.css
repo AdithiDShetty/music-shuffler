@@ -15,18 +15,15 @@ body {
   padding: 16px;
 }
 
-/* UPLOAD */
+/* Upload */
 .upload-card {
   background: rgba(255,255,255,0.08);
   border-radius: 24px;
   padding: 30px 20px;
   text-align: center;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.4);
 }
 
-.upload-icon {
-  font-size: 48px;
-}
+.upload-icon { font-size: 48px; }
 
 .upload-btn {
   background: #1db954;
@@ -34,15 +31,13 @@ body {
   padding: 10px 20px;
   border-radius: 20px;
   font-size: 14px;
-  cursor: pointer;
 }
 
-/* PLAYER */
+/* Player */
 .player-card {
   background: rgba(255,255,255,0.08);
   border-radius: 24px;
   padding: 20px;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.4);
 }
 
 .cover {
@@ -56,9 +51,7 @@ body {
   margin-bottom: 16px;
 }
 
-.song-info {
-  text-align: center;
-}
+.song-info { text-align: center; }
 
 .song-title {
   font-size: 16px;
@@ -73,7 +66,6 @@ body {
   opacity: 0.6;
 }
 
-/* SEEK */
 .seek-wrapper { margin-top: 10px; }
 input[type="range"] { width: 100%; }
 
@@ -84,7 +76,7 @@ input[type="range"] { width: 100%; }
   opacity: 0.7;
 }
 
-/* CONTROLS */
+/* Controls */
 .main-controls {
   display: flex;
   justify-content: center;
@@ -103,7 +95,6 @@ button {
   border: none;
   color: white;
   font-size: 22px;
-  cursor: pointer;
 }
 
 .play-btn {
@@ -114,17 +105,10 @@ button {
   height: 56px;
 }
 
-button.active {
-  color: #1db954;
-}
+button.active { color: #1db954; }
 
-/* LISTS */
+/* Lists */
 section { margin-top: 20px; }
-
-h3 {
-  font-size: 14px;
-  opacity: 0.8;
-}
 
 ul {
   list-style: none;
@@ -135,12 +119,6 @@ ul {
 li {
   padding: 10px;
   border-radius: 10px;
-  font-size: 14px;
-  cursor: pointer;
-}
-
-li:hover {
-  background: rgba(255,255,255,0.05);
 }
 
 li.active {
@@ -148,7 +126,7 @@ li.active {
   font-weight: 600;
 }
 
-/* FLOATING */
+/* Floating */
 .floating-btn {
   position: fixed;
   bottom: 24px;
