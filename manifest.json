@@ -1,0 +1,9 @@
+{
+  "name": "My MP3 Shuffler",
+  "short_name": "ShufflePlayer",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#121212",
+  "theme_color": "#1db954",
+  "icons": []
+}

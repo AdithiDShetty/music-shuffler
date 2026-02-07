@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My MP3 Shuffler</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="app">
+
+  <!-- UPLOAD CARD -->
+  <div class="upload-card" id="uploadCard">
+    <div class="upload-icon">📁</div>
+    <h2>Select Music Folder</h2>
+    <p>Your music stays on your device</p>
+    <button id="selectBtn" class="upload-btn">Upload Folder</button>
+  </div>
+
+  <!-- PLAYER -->
+  <div class="player-card hidden" id="playerCard">
+
+    <div class="cover">🎵</div>
+
+    <div class="song-info">
+      <div id="trackName" class="song-title">No track playing</div>
+      <div class="song-sub">Local MP3</div>
+    </div>
+
+    <!-- SEEK BAR -->
+    <div class="seek-wrapper">
+      <input type="range" id="seekBar" value="0" min="0">
+      <div class="time-row">
+        <span id="currentTime">0:00</span>
+        <span id="duration">0:00</span>
+      </div>
+    </div>
+
+    <!-- CONTROLS -->
+    <div class="main-controls">
+      <button id="prev">⏮</button>
+      <button id="playPause" class="play-btn">▶</button>
+      <button id="next">⏭</button>
+    </div>
+
+    <div class="secondary-controls">
+      <button id="shuffleBtn">🔀</button>
+      <button id="repeatBtn">🔁</button>
+    </div>
+
+  </div>
+
+  <!-- UP NEXT -->
+  <section class="queue hidden" id="queueSection">
+    <h3>Up Next</h3>
+    <ul id="upNext"></ul>
+  </section>
+
+  <!-- PLAYLIST -->
+  <section class="playlist-section hidden" id="playlistSection">
+    <h3>Playlist</h3>
+    <ul id="playlist"></ul>
+  </section>
+
+</div>
+
+<!-- FILE INPUT -->
+<input
+  type="file"
+  id="fileInput"
+  accept="audio/*"
+  webkitdirectory
+  multiple
+  hidden
+>
+
+<!-- CHANGE FOLDER -->
+<button id="changeFolderBtn" class="floating-btn hidden">📁</button>
+
+<audio id="audio"></audio>
+
+<script src="script.js"></script>
+</body>
+</html>
