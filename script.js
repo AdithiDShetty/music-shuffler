@@ -28,6 +28,7 @@ let currentIndex = 0;
 let shuffleEnabled = true;
 let repeatMode = "off";
 
+/* ---------- FILE PICKER ---------- */
 selectBtn.onclick = changeFolderBtn.onclick = () => fileInput.click();
 
 fileInput.onchange = () => {
@@ -45,6 +46,7 @@ fileInput.onchange = () => {
   playFromQueue(0);
 };
 
+/* ---------- QUEUE ---------- */
 function rebuildQueue(startTrack = null) {
   let base = [...tracks];
 
@@ -63,6 +65,7 @@ function rebuildQueue(startTrack = null) {
   updateUpNext();
 }
 
+/* ---------- PLAY ---------- */
 function playFromQueue(index) {
   currentIndex = index;
   const track = playOrder[currentIndex];
@@ -93,6 +96,11 @@ function playNext() {
   playFromQueue(currentIndex);
 }
 
+function playPrev() {
+  if (currentIndex > 0) playFromQueue(currentIndex - 1);
+}
+
+/* ---------- CONTROLS ---------- */
 playPause.onclick = () => {
   if (audio.paused) {
     audio.play();
@@ -104,9 +112,10 @@ playPause.onclick = () => {
 };
 
 nextBtn.onclick = playNext;
-prevBtn.onclick = () => currentIndex > 0 && playFromQueue(--currentIndex);
+prevBtn.onclick = playPrev;
 audio.onended = playNext;
 
+/* ---------- SHUFFLE / REPEAT ---------- */
 shuffleBtn.onclick = () => {
   shuffleEnabled = !shuffleEnabled;
   shuffleBtn.classList.toggle("active", shuffleEnabled);
@@ -118,6 +127,7 @@ repeatBtn.onclick = () => {
   repeatBtn.textContent = repeatMode === "one" ? "🔂" : "🔁";
 };
 
+/* ---------- LISTS ---------- */
 function renderPlaylist() {
   playlistEl.innerHTML = "";
   tracks.forEach(track => {
@@ -144,10 +154,18 @@ function updateUpNext() {
     li.textContent = t.name;
     upNextEl.appendChild(li);
   });
+/*************  ✨ Windsurf Command 🌟  *************/
+  currentTimeEl.textContent = formatTime(seekBar.value);
 }
 
-/* Seek bar */
+/* ---------- SEEK ---------- */
+seekBar.oninput = () => {
+  const time = seekBar.value;
+  audio.currentTime = time;
+  currentTimeEl.textContent = formatTime(time);
+};
 audio.onloadedmetadata = () => {
+/*******  1ab5ba32-0a86-4c2c-ad56-92ddb94cca99  *******/
   seekBar.max = Math.floor(audio.duration);
   durationEl.textContent = formatTime(audio.duration);
 };
@@ -165,12 +183,12 @@ function formatTime(sec) {
   return `${m}:${s}`;
 }
 
-/* 🔔 Media Session (Notification / Lock Screen) */
+/* ---------- MEDIA SESSION ---------- */
 function updateMediaSession(track) {
   if (!("mediaSession" in navigator)) return;
 
   navigator.mediaSession.metadata = new MediaMetadata({
-    title: track.name.replace(".mp3", ""),
+    title: track.name.replace(/\.[^/.]+$/, ""),
     artist: "Local Music",
     album: "MP3 Shuffler",
     artwork: [{
@@ -180,10 +198,16 @@ function updateMediaSession(track) {
     }]
   });
 
-  navigator.mediaSession.setActionHandler("play", () => audio.play());
-  navigator.mediaSession.setActionHandler("pause", () => audio.pause());
-  navigator.mediaSession.setActionHandler("previoustrack", () => {
-    if (currentIndex > 0) playFromQueue(--currentIndex);
+  navigator.mediaSession.setActionHandler("play", () => {
+    audio.play();
+    playPause.textContent = "⏸";
   });
+
+  navigator.mediaSession.setActionHandler("pause", () => {
+    audio.pause();
+    playPause.textContent = "▶";
+  });
+
   navigator.mediaSession.setActionHandler("nexttrack", playNext);
+  navigator.mediaSession.setActionHandler("previoustrack", playPrev);
 }
